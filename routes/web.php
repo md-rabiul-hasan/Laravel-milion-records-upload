@@ -25,7 +25,13 @@ Route::get('/upload', function(){
 
 Route::post('/upload', function(Request $request){
     if( $request->has('mycsv') ){
-        return "File uploaded";
+        
+        $data   = array_map('str_getcsv', file($request->file('mycsv')));
+        $header = $data[0];
+        unset($data[0]);
+        return $data;
+
+
     }
 
     return "Please upload csv file";
