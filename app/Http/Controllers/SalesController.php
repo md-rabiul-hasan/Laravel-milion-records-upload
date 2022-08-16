@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SalesCsvProcess;
 use App\Models\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 
 class SalesController extends Controller
 {
@@ -21,14 +22,15 @@ class SalesController extends Controller
             
             $chunks = array_chunk($data, 100);
 
+            $batch = Bus::batch([])->dispatch();
+
             foreach($chunks as $key => $chunk){
-                if($key == 5){
-                    $header = [];
-                }
-                SalesCsvProcess::dispatch($header, $chunk);
+
+                $batch->add(new SalesCsvProcess($header, $chunk));
+
             }
 
-            return "Sending Chunk File in Queue";
+            return  $batch->id;
     
     
         }
@@ -36,6 +38,10 @@ class SalesController extends Controller
         return "Please upload csv file";
     }
 
+
+    public function batch($batchId){
+        return Bus::findBatch($batchId);
+    }
 
 
 

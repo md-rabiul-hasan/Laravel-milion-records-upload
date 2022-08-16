@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\SalesCsvProcessFailedMail;
 use App\Models\Sale;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +16,7 @@ use Throwable;
 
 class SalesCsvProcess implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $header;
     protected $chunk_data;
