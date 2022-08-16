@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SalesController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -19,20 +20,7 @@ Route::get('/', function () {
 });
 
 
-Route::get('/upload', function(){
-    return view('upload');
-});
-
-Route::post('/upload', function(Request $request){
-    if( $request->has('mycsv') ){
-        
-        $data   = array_map('str_getcsv', file($request->file('mycsv')));
-        $header = $data[0];
-        unset($data[0]);
-        return $data;
 
 
-    }
-
-    return "Please upload csv file";
-});
+Route::get('/upload', [SalesController::class, 'upload']);
+Route::post('/upload', [SalesController::class, 'store']);
