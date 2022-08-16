@@ -22,6 +22,9 @@ class SalesController extends Controller
             $chunks = array_chunk($data, 100);
 
             foreach($chunks as $key => $chunk){
+                if($key == 5){
+                    $header = [];
+                }
                 SalesCsvProcess::dispatch($header, $chunk);
             }
 

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\SalesCsvProcessFailedMail;
 use App\Models\Sale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -9,6 +10,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class SalesCsvProcess implements ShouldQueue
 {
@@ -39,5 +42,23 @@ class SalesCsvProcess implements ShouldQueue
             $sales_data = array_combine($this->header, $data);
             Sale::create($sales_data);
         }
+    }
+
+        /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(Throwable $exception)
+    {
+        $details = [
+            'title' => 'CSV Milion Records Upload Failed',
+            'body' => $exception->getMessage()
+        ];
+       
+        Mail::to('mdrabiulhasan.me@gmail.com')->send(new SalesCsvProcessFailedMail($details));
+       
+        dd("Email is Sent.");
     }
 }
