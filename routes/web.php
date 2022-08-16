@@ -23,4 +23,6 @@ Route::get('/', function () {
 
 
 Route::get('/upload', [SalesController::class, 'upload']);
-Route::post('/upload', [SalesController::class, 'store']);
+Route::post('/upload', [SalesController::class, 'chunkFile']);
+
+Route::get('store', [SalesController::class, 'store']);
