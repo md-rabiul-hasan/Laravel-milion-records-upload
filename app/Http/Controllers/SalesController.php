@@ -6,6 +6,7 @@ use App\Jobs\SalesCsvProcess;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
 {
@@ -20,7 +21,7 @@ class SalesController extends Controller
             $header = $data[0];
             unset($data[0]);
             
-            $chunks = array_chunk($data, 100);
+            $chunks = array_chunk($data, 50);
 
             $batch = Bus::batch([])->dispatch();
 
@@ -30,7 +31,7 @@ class SalesController extends Controller
 
             }
 
-            return  $batch->id;
+            return  response()->json($batch);
     
     
         }
@@ -40,8 +41,19 @@ class SalesController extends Controller
 
 
     public function batch($batchId){
-        return Bus::findBatch($batchId);
+        $details = Bus::findBatch($batchId);
+		return response()->json($details);
     }
+	
+	public function inProgress(){
+		$batch_jobs = DB::table('job_batches')->where('pending_jobs', '>', 0)->get();
+		if( count($batch_jobs) > 0 ){
+			$batch_id = $batch_jobs[0]->id;
+			$details = Bus::findBatch($batch_id);
+			return response()->json($details);
+		}
+		return response()->json([]);
+	}
 
 
 

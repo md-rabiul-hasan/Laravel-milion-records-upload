@@ -22,9 +22,9 @@ Route::get('/', function () {
 
 
 
-Route::get('/upload', [SalesController::class, 'upload']);
-Route::post('/upload', [SalesController::class, 'chunkFile']);
+// Route::get('/upload', [SalesController::class, 'upload']);
+// Route::post('/upload', [SalesController::class, 'chunkFile']);
 
-Route::get('store', [SalesController::class, 'store']);
+// Route::get('store', [SalesController::class, 'store']);
 
-Route::get('/batch/{batchId}', [SalesController::class, 'batch']);
+// Route::get('/batch/{batchId}', [SalesController::class, 'batch']);
